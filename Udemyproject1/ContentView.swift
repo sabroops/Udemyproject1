@@ -20,14 +20,20 @@ struct ARViewContainer: UIViewRepresentable {
         
         let arView = ARView(frame: .zero)
         
-        // Load the "Box" scene from the "Experience" Reality File
-        let boxAnchor = try! Experience.loadBox()
+        //ar view will be responsible for handling tap gestures
+        arView.addGestureRecognizer(UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap)))
         
-        // Add the box anchor to the scene
-        arView.scene.anchors.append(boxAnchor)
+        //ensure coordinator knows about view
+        context.coordinator.view = arView
+        //coordinater handles arview session functions, hence it becomes the delegate
+//        arView.session.delegate = context.coordinator
         
         return arView
         
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
     }
     
     func updateUIView(_ uiView: ARView, context: Context) {}
